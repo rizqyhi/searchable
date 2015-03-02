@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Query\Expression;
 use Config;
-use Str;
 
 /**
  * Trait SearchableTrait
@@ -124,22 +123,9 @@ trait SearchableTrait
         if ($driver == 'sqlsrv') {
             $columns = $this->getTableColumns();
         } else {
-            $id = $this->getTable() . '.' .$this->primaryKey;
-            $joins = array_keys(($this->getJoins()));
-
-            foreach ($this->getColumns() as $column => $relevance) {
-
-                array_map(function($join) use ($column, $query){
-
-                    if(Str::contains($column, $join)){
-                        $query->groupBy("$column");
-                    }
-
-                }, $joins);
-
-            }
+            $columns = $this->primaryKey;
         }
-        $query->groupBy($id);
+        $query->groupBy($columns);
     }
 
     /**
